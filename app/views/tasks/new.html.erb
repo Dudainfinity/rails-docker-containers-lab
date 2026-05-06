@@ -1,0 +1,25 @@
+<style>
+  :root { --mono: 'JetBrains Mono', monospace; }
+  body { background: #000d06 !important; color: #c8ffe0; font-family: 'Inter', sans-serif; }
+  .page-wrap { max-width: 600px; margin: 0 auto; padding: 80px 24px 60px; }
+  .page-header { margin-bottom: 36px; }
+  .page-header h1 { font-size: 1.8rem; font-weight: 800; color: #fff; letter-spacing: -.02em; }
+  .page-header h1 span { color: #00ff88; }
+  .btn-back { font-family: var(--mono); font-size: .75rem; padding: 8px 18px; background: transparent; color: #69ffb8; border: 1px solid rgba(0,255,136,.3); border-radius: 8px; text-decoration: none; }
+  .form-wrap { background: rgba(0,255,136,.03); border: 1px solid rgba(0,255,136,.15); border-radius: 14px; padding: 32px; }
+</style>
+
+<div class="page-wrap">
+  <div class="page-header">
+    <div style="font-family:var(--mono);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:#00ff88;margin-bottom:8px;">// nova tarefa</div>
+    <h1>Criar <span>Tarefa</span></h1>
+  </div>
+
+  <div class="form-wrap">
+    <%= render "form", task: @task %>
+  </div>
+
+  <div style="margin-top:20px;">
+    <%= link_to "← Voltar", tasks_path, class: "btn-back" %>
+  </div>
+</div>

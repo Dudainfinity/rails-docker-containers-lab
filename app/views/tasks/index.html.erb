@@ -1,0 +1,80 @@
+<% content_for :head do %>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<% end %>
+
+<style>
+  :root { --mono: 'JetBrains Mono', monospace; }
+  body { background: #000d06 !important; color: #c8ffe0; font-family: 'Inter', sans-serif; }
+  .page-wrap { max-width: 860px; margin: 0 auto; padding: 80px 24px 60px; }
+  .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 40px; flex-wrap: wrap; gap: 16px; }
+  .page-header h1 { font-size: 2rem; font-weight: 800; color: #fff; letter-spacing: -.02em; }
+  .page-header h1 span { color: #00ff88; }
+  .btn-new { font-family: var(--mono); font-size: .78rem; padding: 10px 22px; background: rgba(0,255,136,.1); color: #00ff88; border: 1px solid rgba(0,255,136,.4); border-radius: 8px; text-decoration: none; letter-spacing: .08em; transition: all .2s; }
+  .btn-new:hover { background: rgba(0,255,136,.2); box-shadow: 0 0 16px rgba(0,255,136,.2); }
+  .btn-home { font-family: var(--mono); font-size: .75rem; padding: 8px 18px; background: #059669; color: #fff; border-radius: 8px; text-decoration: none; font-weight: 700; }
+  .flash { font-family: var(--mono); font-size: .82rem; padding: 12px 20px; border-radius: 8px; margin-bottom: 24px; background: rgba(0,255,136,.08); border: 1px solid rgba(0,255,136,.3); color: #69ffb8; }
+  .task-list { display: flex; flex-direction: column; gap: 12px; }
+  .task-card { background: rgba(0,255,136,.03); border: 1px solid rgba(0,255,136,.15); border-radius: 12px; padding: 20px 24px; display: flex; align-items: center; gap: 16px; transition: border-color .2s; }
+  .task-card:hover { border-color: rgba(0,255,136,.35); }
+  .task-card.done { opacity: .55; }
+  .task-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .task-dot.pending { background: #00ff88; box-shadow: 0 0 8px #00ff88; }
+  .task-dot.done-dot { background: #2a6642; }
+  .task-title { flex: 1; font-size: .95rem; font-weight: 600; color: #c8ffe0; }
+  .task-card.done .task-title { text-decoration: line-through; color: #4a7a60; }
+  .task-meta { font-family: var(--mono); font-size: .68rem; color: #2d6644; }
+  .task-actions { display: flex; gap: 10px; }
+  .task-actions a, .task-actions button { font-family: var(--mono); font-size: .7rem; padding: 6px 14px; border-radius: 6px; text-decoration: none; border: 1px solid; cursor: pointer; background: transparent; transition: all .2s; }
+  .btn-show { color: #69ffb8; border-color: rgba(0,255,136,.3); }
+  .btn-show:hover { background: rgba(0,255,136,.1); }
+  .btn-edit { color: #ffd980; border-color: rgba(255,217,128,.3); }
+  .btn-edit:hover { background: rgba(255,217,128,.08); }
+  .btn-del { color: #ff8888; border-color: rgba(255,100,100,.3); }
+  .btn-del:hover { background: rgba(255,80,80,.08); }
+  .empty { text-align: center; padding: 60px 24px; font-family: var(--mono); color: #2a6642; }
+  .empty p { font-size: .88rem; margin-top: 8px; }
+</style>
+
+<div class="page-wrap">
+  <div class="page-header">
+    <div>
+      <div style="font-family:var(--mono);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:#00ff88;margin-bottom:8px;">// tasks</div>
+      <h1>Lista de <span>Tarefas</span></h1>
+    </div>
+    <div style="display:flex;gap:12px;align-items:center;">
+      <%= link_to "← Home", root_path, class: "btn-home" %>
+      <%= link_to "+ Nova tarefa", new_task_path, class: "btn-new" %>
+    </div>
+  </div>
+
+  <% if notice.present? %>
+    <div class="flash"><%= notice %></div>
+  <% end %>
+
+  <% if @tasks.any? %>
+    <div class="task-list">
+      <% @tasks.each do |task| %>
+        <div class="task-card <%= task.done? ? 'done' : '' %>">
+          <div class="task-dot <%= task.done? ? 'done-dot' : 'pending' %>"></div>
+          <div style="flex:1;min-width:0;">
+            <div class="task-title"><%= task.title %></div>
+            <% if task.description.present? %>
+              <div class="task-meta" style="margin-top:4px;"><%= truncate(task.description, length: 80) %></div>
+            <% end %>
+          </div>
+          <div class="task-meta"><%= task.created_at.strftime("%d/%m/%Y") %></div>
+          <div class="task-actions">
+            <%= link_to "ver", task_path(task), class: "btn-show" %>
+            <%= link_to "editar", edit_task_path(task), class: "btn-edit" %>
+            <%= button_to "×", task_path(task), method: :delete, class: "btn-del", form: { data: { turbo_confirm: "Remover tarefa?" } } %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="empty">
+      <div style="font-size:2rem;color:#1a4a2e;">[ ]</div>
+      <p>Nenhuma tarefa ainda.<br>Crie a primeira!</p>
+    </div>
+  <% end %>
+</div>

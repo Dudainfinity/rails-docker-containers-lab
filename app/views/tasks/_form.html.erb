@@ -1,0 +1,55 @@
+<% content_for :head do %>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<% end %>
+
+<style>
+  :root { --mono: 'JetBrains Mono', monospace; }
+  body { background: #000d06 !important; color: #c8ffe0; }
+  .field-group { margin-bottom: 20px; }
+  .field-group label { display: block; font-family: var(--mono); font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: #2a7a50; margin-bottom: 8px; }
+  .field-group input[type="text"],
+  .field-group textarea { width: 100%; background: #000e07; border: 1px solid rgba(0,255,136,.25); border-radius: 8px; padding: 12px 16px; color: #c8ffe0; font-family: var(--mono); font-size: .88rem; outline: none; transition: border-color .2s; box-sizing: border-box; }
+  .field-group input[type="text"]:focus,
+  .field-group textarea:focus { border-color: #00ff88; box-shadow: 0 0 0 2px rgba(0,255,136,.15); }
+  .field-group textarea { min-height: 100px; resize: vertical; }
+  .check-wrap { display: flex; align-items: center; gap: 10px; }
+  .check-wrap input[type="checkbox"] { width: 16px; height: 16px; accent-color: #00ff88; }
+  .check-wrap span { font-family: var(--mono); font-size: .82rem; color: #69ffb8; }
+  .errors { background: rgba(255,50,50,.08); border: 1px solid rgba(255,80,80,.3); border-radius: 10px; padding: 16px 20px; margin-bottom: 24px; }
+  .errors ul { list-style: none; margin: 0; padding: 0; }
+  .errors li { font-family: var(--mono); font-size: .82rem; color: #ff8888; }
+  .errors li::before { content: "✘ "; }
+  .btn-submit { font-family: var(--mono); font-size: .82rem; padding: 12px 28px; background: rgba(0,255,136,.1); color: #00ff88; border: 1px solid rgba(0,255,136,.4); border-radius: 8px; cursor: pointer; letter-spacing: .08em; transition: all .2s; }
+  .btn-submit:hover { background: rgba(0,255,136,.2); box-shadow: 0 0 16px rgba(0,255,136,.2); }
+</style>
+
+<% if task.errors.any? %>
+  <div class="errors">
+    <ul>
+      <% task.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<%= form_with model: task do |f| %>
+  <div class="field-group">
+    <%= f.label :title, "Título" %>
+    <%= f.text_field :title, placeholder: "Nome da tarefa..." %>
+  </div>
+
+  <div class="field-group">
+    <%= f.label :description, "Descrição" %>
+    <%= f.text_area :description, placeholder: "Detalhes opcionais..." %>
+  </div>
+
+  <div class="field-group">
+    <div class="check-wrap">
+      <%= f.check_box :done %>
+      <span>Concluída</span>
+    </div>
+  </div>
+
+  <%= f.submit task.new_record? ? "Criar tarefa" : "Salvar alterações", class: "btn-submit" %>
+<% end %>
